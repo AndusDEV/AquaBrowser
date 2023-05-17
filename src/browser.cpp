@@ -1,13 +1,12 @@
 #include <gtk/gtk.h>
 #include <webkit2/webkit2.h>
 
-static GtkWidget *address_entry;
 static GtkWidget *back_button;
 static GtkWidget *forward_button;
 static GtkWidget *refresh_button;
-static GtkWidget *bookmark_menu;
 static GtkWidget *search_entry;
 static GtkWidget *search_engine_combo;
+static GtkWidget *address_entry;
 static WebKitWebView *web_view;
 
 typedef enum {
@@ -87,15 +86,6 @@ static GtkWidget* create_window() {
     GtkWidget *vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
     gtk_container_add(GTK_CONTAINER(window), vbox);
 
-    // Address Bar
-    GtkWidget *address_bar = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
-    gtk_box_pack_start(GTK_BOX(vbox), address_bar, FALSE, FALSE, 0);
-
-    address_entry = gtk_entry_new();
-    gtk_entry_set_icon_from_icon_name(GTK_ENTRY(address_entry), GTK_ENTRY_ICON_PRIMARY, "globe");
-    gtk_entry_set_placeholder_text(GTK_ENTRY(search_entry), "Enter website address");
-    gtk_box_pack_start(GTK_BOX(address_bar), address_entry, TRUE, TRUE, 0);
-
     // Toolbar (back, forward, refresh, search bar, search engine combobox)
     GtkWidget *toolbar = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
     gtk_box_pack_start(GTK_BOX(vbox), toolbar, FALSE, FALSE, 0);
@@ -108,9 +98,6 @@ static GtkWidget* create_window() {
 
     refresh_button = gtk_button_new_from_icon_name("view-refresh", GTK_ICON_SIZE_BUTTON);
     gtk_box_pack_start(GTK_BOX(toolbar), refresh_button, FALSE, FALSE, 0);
-
-    bookmark_menu = gtk_label_new("Bookmarks here soon");
-    gtk_box_pack_start(GTK_BOX(toolbar), bookmark_menu, TRUE, TRUE, 0);
 
     search_entry = gtk_search_entry_new();
     gtk_entry_set_placeholder_text(GTK_ENTRY(search_entry), "Enter your search query");
@@ -129,6 +116,15 @@ static GtkWidget* create_window() {
     web_view = WEBKIT_WEB_VIEW(webkit_web_view_new());
     gtk_widget_set_size_request(GTK_WIDGET(web_view), -1, -1);
     gtk_box_pack_start(GTK_BOX(vbox), GTK_WIDGET(web_view), TRUE, TRUE, 0);
+
+    // Address Bar (+ tabs, as combobox, in future)
+    GtkWidget *address_bar = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    gtk_box_pack_start(GTK_BOX(vbox), address_bar, FALSE, FALSE, 0);
+
+    address_entry = gtk_entry_new();
+    gtk_entry_set_icon_from_icon_name(GTK_ENTRY(address_entry), GTK_ENTRY_ICON_PRIMARY, "globe");
+    gtk_entry_set_placeholder_text(GTK_ENTRY(address_entry), "Enter website address");
+    gtk_box_pack_start(GTK_BOX(address_bar), address_entry, TRUE, TRUE, 0);
 
     gtk_window_set_icon_from_file(GTK_WINDOW(window), "src/img/logo.png", NULL);
 
